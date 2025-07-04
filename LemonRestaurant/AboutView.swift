@@ -20,7 +20,7 @@ struct AboutView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(height: 80)
-            Text("You've order \(orders) times")
+            Text("You've order \(orders) times.")
             Button("Order again"){
                 orders += 1
             }
