@@ -13,7 +13,7 @@ struct AboutView: View {
     @State private var reservations = 0
     var body: some View {
         VStack{
-            Text("Welcome \(userName) to Little Lemon!!!")
+            Text("Welcome \(userName) to Little Lemon!")
                 .font(.title)
                 .padding()
             Image("littleLemonLogo")
