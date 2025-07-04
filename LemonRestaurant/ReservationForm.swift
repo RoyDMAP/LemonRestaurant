@@ -20,7 +20,6 @@ struct ReservationForm: View {
                     
                     Stepper("Guests: \(guestCount)", value: $guestCount, in: 1...10)
                 }
-                
                 Section {
                     Button("Make Reservation") {
                         // Action for making reservation
