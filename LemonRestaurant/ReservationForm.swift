@@ -14,6 +14,10 @@ struct ReservationForm: View {
     var body: some View {
         NavigationView {
             Form {
+                Image("littleLemonLogo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 70)
                 Section("Reservation Details") {
                     TextField("Enter your name", text: $userName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
