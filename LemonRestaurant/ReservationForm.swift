@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReservationForm: View {
     @State private var userName: String = ""
-    @State private var guestCount: Int = 1
+    @State private var guestCount: Int = 0
     
     var body: some View {
         NavigationView {
@@ -18,11 +18,22 @@ struct ReservationForm: View {
                     TextField("Enter your name", text: $userName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
-                    Stepper("Guests: \(guestCount)", value: $guestCount, in: 1...10)
+                    if userName.isEmpty {
+                        Text("Please enter your name")
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
+                    
+                    Stepper("Guests: \(guestCount)", value: $guestCount, in: 0...10)
+                    
+                    if guestCount > 5 {
+                        Text("For large parties, we will contact you")
+                            .foregroundColor(.orange)
+                            .font(.caption)
+                    }
                 }
                 Section {
-                    Button("Make Reservation") {
-                        // Action for making reservation
+                    Button("Confirm Reservation") {
                         print("Reservation made for \(userName) with \(guestCount) guests")
                     }
                     .disabled(userName.isEmpty)
