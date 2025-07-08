@@ -12,7 +12,7 @@ struct AboutView: View {
     @State private var userName = ""
     @State private var reservations = 0
     var body: some View {
-        VStack{
+        VStack{ // alignment: .leading .center .trailing
             Text("Welcome \(userName) to Little Lemon!")
                 .font(.title)
                 .padding()
@@ -24,7 +24,9 @@ struct AboutView: View {
             Button("Order again"){
                 orders += 1
             }
-                Button("Reset"){
+            Divider() 
+            Spacer()
+            Button("Reset"){
                 orders += 0
             }
             TextField("Enter your name",text: $userName)
