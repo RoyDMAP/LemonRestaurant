@@ -8,31 +8,30 @@
 import SwiftUI
 
 struct MenuView: View {
-    @State private var showMessage = false
+    @Environment(\.dismiss) var dismiss
     @State private var showVegetarianOnly = false
-    // create a dictionary dish:price (6 items)
+    @State private var showDesserts = false
     
     let menuItems = [
-        "Burgers": 15.99,
-        "HotDogs": 3.99,
-        "Fries": 2.49,
-        "Salad": 13.49,
-        "Corn Dogs": 4.29
+        MenuItem(name: "Burgers", description: "Juicy and fresh", price: 15.99),
+        MenuItem(name: "HotDogs", description: "Chewy and delicious", price: 3.99),
+        MenuItem(name: "Fries", description: "Crispy and golden brown", price: 2.49, isVegetarian: true),
+        MenuItem(name: "Salad", description: "Fresh greens and your choice of dressing", price: 13.49, isVegetarian: true),
+        MenuItem(name: "Corn Dogs", description: "Sweet and juicy corn on a stick", price: 4.29),
+        MenuItem(name: "Vegetable Lasagna", description: "Layers of pasta with fresh vegetables,ricotta, and marinara sauce",price: 14.99, isVegetarian: true),
+        MenuItem(name: "Beef Tacos",description: "Three soft tacos with seasoned ground beef, lettuce, tomatoes, and cheese",price: 12.99),
+        MenuItem(name: "Eggrolls",description: "Crispy fried rolls filled with cabbage, carrots, and your choice of protein",price: 8.99)
     ]
     
     let vegetarianItems: Set<String> = ["Fries", "Salad", "Pizza"]
     
-    var filteredItems: [(key: String, value: Double)] {
-        let sorted = menuItems.sorted(by: {$0.key < $1.key})
-        if showVegetarianOnly {
-            return sorted.filter { vegetarianItems.contains($0.key) }
-        }
-        return sorted
+    var filteredItems: [MenuItem] {
+        showVegetarianOnly ? menuItems.filter { $0.isVegetarian } : menuItems
     }
     
     var body: some View {
         VStack {
-            HStack{
+            HStack {
                 Image(systemName: "fork.knife")
                     .foregroundColor(.orange)
                     .font(.system(size: 32))
@@ -41,58 +40,25 @@ struct MenuView: View {
             }
             .padding()
             
-            Text("Vegetarian dishes: \(vegetarianItems.count)")
-                .font(.subheadline)
-                .foregroundColor(.green)
-            
-            VStack(spacing: 20){
-                Toggle("Show a special text",isOn: $showMessage)
-                
-                Toggle("Show Vegetarian Only", isOn: $showVegetarianOnly)
-                
-                if showMessage {
-                    Text("You unlocked a surprise!")
-                        .font(.title3)
-                        .foregroundColor(.green)
-                }
+            Button("View Desserts") {
+                showDesserts.toggle()
             }
-                
-            List{
-                ForEach(filteredItems, id: \.key){
-                    (name,price) in
-                    HStack{
-                        VStack(alignment: .leading){
-                            Text(name)
-                                .font(.headline)
-                            Text("$\(price, specifier: "%.2f")")
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        
-                        
-                        if price > 10{
-                            HStack{
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                                Text("Premium")
-                                    .font(.caption)
-                            }
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                            .padding(6)
-                            .background(Color.orange.opacity(0.1))
-                            .cornerRadius(6)
-                            
-                        }
-                        
-                    }
-                    .padding(.vertical)
-                }
+            .padding()
+                .background(Color.green.opacity(0.3))
+                .foregroundColor(.black)
+                .cornerRadius(8)
+                .sheet(isPresented: $showDesserts) {
+                    DessertView()
+            }
+            Toggle("Show Vegetarian Only", isOn: $showVegetarianOnly)
+                .padding(.horizontal)
+            
+            List(filteredItems) { item in
+                MenuItemView(item: item)
             }
         }
     }
 }
-
 #Preview {
     MenuView()
 }
