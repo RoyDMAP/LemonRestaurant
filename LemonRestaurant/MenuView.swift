@@ -28,6 +28,12 @@ struct MenuView: View {
     var filteredItems: [MenuItem] {
         showVegetarianOnly ? menuItems.filter { $0.isVegetarian } : menuItems
     }
+    //COMPUTED PROPERTY
+    var averagePrice: Double {
+        let total = filteredItems.map{$0.price}.reduce(0, +)
+        return total / Double(filteredItems.count)
+    }
+    
     
     var body: some View {
         VStack {
@@ -40,15 +46,20 @@ struct MenuView: View {
             }
             .padding()
             
+            Text("Average price: $\(averagePrice, specifier: "%.2f")")
+                .font(.footnote)
+                .foregroundColor(.secondary)
+            
             Button("View Desserts") {
                 showDesserts.toggle()
             }
             .padding()
-                .background(Color.green.opacity(0.3))
+                .background(Color.green.opacity(0.4))
                 .foregroundColor(.black)
-                .cornerRadius(8)
-                .sheet(isPresented: $showDesserts) {
-                    DessertView()
+                .cornerRadius(12)
+            
+            .sheet(isPresented: $showDesserts) {
+                DessertItemView()
             }
             Toggle("Show Vegetarian Only", isOn: $showVegetarianOnly)
                 .padding(.horizontal)
