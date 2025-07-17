@@ -11,6 +11,7 @@ struct MenuView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showVegetarianOnly = false
     @State private var showDesserts = false
+    @State private var showPremiumOnly = false
     
     let menuItems = [
         MenuItem(name: "Burgers", description: "Juicy and fresh", price: 15.99),
@@ -33,6 +34,34 @@ struct MenuView: View {
         let total = filteredItems.map{$0.price}.reduce(0, +)
         return total / Double(filteredItems.count)
     }
+    
+    var filteredMenu:[MenuItem] {
+        showPremiumOnly ? menuItems.filter{$0.price > 10} : menuItems
+    }
+    
+    var premiumItemsCount: Int {
+        let total = filteredItems.filter({$0.price > 10}).count
+        return total
+    }
+    
+    var regularItems: Int {
+        var counter = 0
+        
+        menuItems.forEach {item in
+            if item.price < 10 {
+                counter += 1
+            }
+        }
+        return counter
+    }
+    
+    var totalPrice: String {
+        let total = menuItems.reduce(0){$0 + $1.price}
+        
+        return String(format: "%.2f", total)
+    }
+
+    
     
     
     var body: some View {
@@ -67,6 +96,11 @@ struct MenuView: View {
             List(filteredItems) { item in
                 MenuItemView(item: item)
             }
+            Text("Premium: \(premiumItemsCount) | Regular: \(regularItems) | Total: $ \(totalPrice)")
+                .font(.subheadline)
+                .padding()
+                .background(Color.yellow.opacity(0.2))
+                .cornerRadius(8)
         }
     }
 }
